@@ -39,6 +39,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     Route::delete('/transaction/{id_user}/delete/{id_transaction}', [TransactionController::class, 'destroy']);
 
-    Route::get('/transaction/{id_user}', [TransactionController::class, 'index']);
+    Route::get('/transaction', [TransactionController::class, 'indexAdmin']);
 
 

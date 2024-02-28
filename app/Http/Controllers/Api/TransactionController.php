@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
@@ -113,5 +114,34 @@ class TransactionController extends Controller
                 'message' => 'O usuário de id inserido não existe'
             ], 404);
         }
+    }
+
+    public function indexAdmin(Request $request){
+        $category = '%'.$request->category.'%';
+        $user = '%'.$request->user.'%';
+        $type = '%'.$request->type.'%';
+
+        $transactions = collect(DB::select('SELECT * 
+                                            FROM TRANSACTIONS 
+                                            WHERE ID_CATEGORY IN (SELECT ID 
+                                                                  FROM CATEGORIES
+                                                                  WHERE NAME LIKE ?)
+                                            AND ID_USER IN (SELECT ID
+                                                            FROM USERS
+                                                            WHERE NAME LIKE ?)
+                                            AND TYPE LIKE ?', [$category, $user, $type]));
+
+            if ($transactions->count()){
+                return response()->json([
+                    'status' => 200,
+                    'transações' => $transactions
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Nenhuma Transação Feita'
+                ], 404);
+            }   
     }
 }
