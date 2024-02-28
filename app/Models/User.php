@@ -12,34 +12,37 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'users';
+
     protected $fillable = [
         'name',
+        'cpf',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function users(){
+        return $this->hasMany('App\Models\Transaction');
+        return $this->hasMany('App\Models\Category');
+    }
+
+    // protected function createdAtFormatted(): User{
+    //     return user::make(
+    //         get: fn ($value, $attributes) => $attributes['created_at']->format('d-M-Y, H:i'),
+    //     );
+    // }
+
+    // protected function updatedAtFormatted(): User{
+    //     return User::make(
+    //         get: fn ($value, $attributes) => $attributes['updated_at']->format('d-M-Y, H:i'),
+    //     );
+    // }
 }
