@@ -11,6 +11,34 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+    /**
+     * 
+     * @OA\Get(
+     *     path="/api/category/{id}",
+     *     tags={"Categoria"},
+     *     summary="Listar todas as Categorias",
+     *     description="Usuário pode utilizar para visualizar todas as suas categorias.",
+     *     operationId="categoryIndex",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação Bem Seucedida",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Nenhum Usuário Encontrado"
+     *     ),
+     * ),
+     */
+
+
     public function index($id_user){
         $categories = Category::where('id_user', '=', $id_user)->get();
 

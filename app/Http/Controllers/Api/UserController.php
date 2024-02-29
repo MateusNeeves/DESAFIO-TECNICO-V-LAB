@@ -10,6 +10,149 @@ use App\Models\Transaction;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller{
+
+
+    /**
+     * 
+     * @OA\Get(
+     *     path="/api/user",
+     *     tags={"Usuário"},
+     *     summary="Listar todos os Usuários",
+     *     description="Desenvolvedor pode utilizar para visualizar todos os usuários.",
+     *     operationId="userIndex",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação Bem Seucedida",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Nenhum Usuário Encontrado"
+     *     ),
+     * ),
+     * 
+     * @OA\Post(
+     *     path="/api/user",
+     *     tags={"Usuário"},
+     *     summary="Cadastrar Novo Usuário",
+     *     description="Desenvolvedo pode utilizar para cadastrar novo usuário.",
+     *     operationId="userStore",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Dados do Usuário",
+     *         @OA\JsonContent(
+     *              required={"name", "cpf", "email", "password"},
+     *              @OA\Property(property="name", type="string", example=""),
+     *              @OA\Property(property="cpf", type="string", example=""),
+     *              @OA\Property(property="email", type="string", example=""),
+     *              @OA\Property(property="password", type="string", example=""),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Input Inválido",
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuário Adicionado no Banco de Dados",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Algo Errado no Insert"
+     *     ),
+     * ),
+     *
+     * @OA\Get(
+     *     path="/api/user/{id}",
+     *     tags={"Usuário"},
+     *     summary="Visualizar um Usuário",
+     *     description="Desenvolvedor pode utilizar para visualizar um usuário pelo id.",
+     *     operationId="userShow",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação Bem Seucedida",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não Encontrado",
+     *     ),
+     * )
+     * 
+     * 
+     * @OA\Put(
+     *     path="/api/user/edit/{id}",
+     *     tags={"Usuário"},
+     *     summary="Editar um Usuário",
+     *     description="Desenvolvedor pode utilizar para editar um usuário pelo id.",
+     *     operationId="userUpdate",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Dados do Usuário",
+     *         @OA\JsonContent(
+     *              required={"name", "cpf", "email", "password"},
+     *              @OA\Property(property="name", type="string", example=""),
+     *              @OA\Property(property="cpf", type="string", example=""),
+     *              @OA\Property(property="email", type="string", example=""),
+     *              @OA\Property(property="password", type="string", example=""),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Input Inválido",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário Atualizado com Sucesso",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não Encontrado",
+     *     ),
+     * )
+     * 
+     * @OA\Delete(
+     *     path="/api/user/delete/{id}",
+     *     tags={"Usuário"},
+     *     summary="Deletar um Usuário",
+     *     description="Desenvolvedor pode utilizar para deletar um usuário pelo id.",
+     *     operationId="userDestroy",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário e Seus Respectivos Filhos Excluídos",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não Encontrado",
+     *     ),
+     * )
+     * 
+     */
+
+
+    
     public function index(){
         $users = User::all();
 
@@ -21,9 +164,9 @@ class UserController extends Controller{
         }
         else{
             return response()->json([
-                'status' => 204,
-                'message' => 'Nenhum Registro Encontrado'
-            ], 204);
+                'status' => 404,
+                'message' => 'Nenhum Usuário Encontrado'
+            ], 404);
         }
     }
 
@@ -80,17 +223,17 @@ class UserController extends Controller{
         }
         else{
             return response()->json([
-                'status' => 204,
+                'status' => 404,
                 'message' => 'Usuário não Encontrado'
-            ], 204);
+            ], 404);
         }
     }
     
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:200',
-            'cpf' => 'required|string|digits:11|unique:users',
-            'email' => 'required|email|max:400|unique:users',
+            'cpf' => 'required|string|digits:11',
+            'email' => 'required|email|max:400',
             'password' => 'required|string|min:8|max:200',
         ]);
 
@@ -104,24 +247,37 @@ class UserController extends Controller{
             $user = User::find($id);
 
             if ($user){
-
-                $user->update([
-                    'name' => $request->name,
-                    'cpf' => $request->cpf,
-                    'email' => $request->email,
-                    'password' => $request->password,
-                ]);
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => "Usuário Atualizado com Sucesso"
-                ], 200);
+                if (User::where('cpf', $request->cpf)->where('id', '!=', $id)->first()){
+                    return response()->json([
+                        'status' => 409,
+                        'message' => "Esse CPF já existe."
+                    ], 409);
+                }
+                else if (User::where('email', $request->email)->where('id', '!=', $id)->first()){
+                    return response()->json([
+                        'status' => 409,
+                        'message' => "Esse Email já existe."
+                    ], 409);
+                }
+                else{
+                    $user->update([
+                        'name' => $request->name,
+                        'cpf' => $request->cpf,
+                        'email' => $request->email,
+                        'password' => $request->password,
+                    ]);
+    
+                    return response()->json([
+                        'status' => 200,
+                        'message' => "Usuário Atualizado com Sucesso"
+                    ], 200);
+                }
             }
             else{
                 return response()->json([
-                    'status' => 204,
+                    'status' => 404,
                     'message' => "Usuário não Encontrado"
-                ], 204);
+                ], 404);
             }
         }
     }
@@ -153,9 +309,9 @@ class UserController extends Controller{
         }
         else{
             return response()->json([
-                'status' => 204,
+                'status' => 404,
                 'message' => 'Usuário não Encontrado'
-            ], 204);
+            ], 404);
         }
     }
 }

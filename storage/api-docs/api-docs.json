@@ -1,0 +1,234 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "V-LAB PROJECT DOCUMENTATION",
+        "contact": {
+            "email": "man2@cin.ufpe.br"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/category/{id}": {
+            "get": {
+                "tags": [
+                    "Categoria"
+                ],
+                "summary": "Listar todas as Categorias",
+                "description": "Usuário pode utilizar para visualizar todas as suas categorias.",
+                "operationId": "categoryIndex",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação Bem Seucedida"
+                    },
+                    "404": {
+                        "description": "Nenhum Usuário Encontrado"
+                    }
+                }
+            }
+        },
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Listar todos os Usuários",
+                "description": "Desenvolvedor pode utilizar para visualizar todos os usuários.",
+                "operationId": "userIndex",
+                "responses": {
+                    "200": {
+                        "description": "Operação Bem Seucedida"
+                    },
+                    "404": {
+                        "description": "Nenhum Usuário Encontrado"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Cadastrar Novo Usuário",
+                "description": "Desenvolvedo pode utilizar para cadastrar novo usuário.",
+                "operationId": "userStore",
+                "requestBody": {
+                    "description": "Dados do Usuário",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "cpf",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Input Inválido"
+                    },
+                    "201": {
+                        "description": "Usuário Adicionado no Banco de Dados"
+                    },
+                    "500": {
+                        "description": "Algo Errado no Insert"
+                    }
+                }
+            }
+        },
+        "/api/user/{id}": {
+            "get": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Visualizar um Usuário",
+                "description": "Desenvolvedor pode utilizar para visualizar um usuário pelo id.",
+                "operationId": "userShow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação Bem Seucedida"
+                    },
+                    "404": {
+                        "description": "Usuário não Encontrado"
+                    }
+                }
+            }
+        },
+        "/api/user/edit/{id}": {
+            "put": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Editar um Usuário",
+                "description": "Desenvolvedor pode utilizar para editar um usuário pelo id.",
+                "operationId": "userUpdate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados do Usuário",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "cpf",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Input Inválido"
+                    },
+                    "200": {
+                        "description": "Usuário Atualizado com Sucesso"
+                    },
+                    "404": {
+                        "description": "Usuário não Encontrado"
+                    }
+                }
+            }
+        },
+        "/api/user/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Usuário"
+                ],
+                "summary": "Deletar um Usuário",
+                "description": "Desenvolvedor pode utilizar para deletar um usuário pelo id.",
+                "operationId": "userDestroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário e Seus Respectivos Filhos Excluídos"
+                    },
+                    "404": {
+                        "description": "Usuário não Encontrado"
+                    }
+                }
+            }
+        }
+    }
+}
