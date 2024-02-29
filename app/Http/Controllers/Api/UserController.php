@@ -86,25 +86,6 @@ class UserController extends Controller{
         }
     }
     
-/*
-    public function edit($id){
-        $user = User::find($id);
-
-        if ($user){
-            return response()->json([
-                'status' => 200,
-                'user' => $user
-            ], 200);
-        }
-        else{
-            return response()->json([
-                'status' => 404,
-                'message' => 'Usuário não Encontrado'
-            ], 404);
-        }
-    }
-*/
-
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:200',

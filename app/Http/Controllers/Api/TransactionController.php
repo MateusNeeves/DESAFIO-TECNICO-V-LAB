@@ -13,87 +13,69 @@ use Illuminate\Support\Facades\Validator;
 class TransactionController extends Controller
 {
     public function index($id_user){
-        if (User::find($id_user)){
-            $transactions = Transaction::where('id_user', '=', $id_user)->get();
-    
-            if ($transactions->count()){
-                return response()->json([
-                    'status' => 200,
-                    'transações' => $transactions
-                ], 200);
-            }
-            else{
-                return response()->json([
-                    'status' => 204,
-                    'message' => 'Você Não Realizou Nenhuma Transação'
-                ], 204);
-            }
+        $transactions = Transaction::where('id_user', '=', $id_user)->get();
+
+        if ($transactions->count()){
+            return response()->json([
+                'status' => 200,
+                'transações' => $transactions
+            ], 200);
         }
+
         else{
             return response()->json([
-                'status' => 204,
-                'message' => 'O usuário de id inserido não existe'
-            ], 204);
+                'status' => 200,
+                'message' => 'Nenhum Transação Realizada'
+            ], 200);
         }
     }
 
     public function store(Request $request, $id_user){
-        if (User::find($id_user)){
-            $validator = Validator::make($request->all(), [
-                'value' => 'required|numeric|between:0,999999.99',
-                'type' => 'required|string|max:10',
-                'id_category' => 'required|numeric',
+        $validator = Validator::make($request->all(), [
+            'value' => 'required|numeric|between:0,999999.99',
+            'type' => 'required|string|max:10',
+            'id_category' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()){
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages()
+            ], 422);
+        }
+
+        else if (Category::where('id', $request->id_category)->where('id_user', '=', $id_user)->first()){
+            $transaction = Transaction::create([
+                'value' => $request->value,
+                'type' => $request->type,
+                'id_user' => $id_user,
+                'id_category' => $request->id_category,
             ]);
-    
-            if ($validator->fails()){
+
+            if ($transaction){
                 return response()->json([
-                    'status' => 422,
-                    'errors' => $validator->messages()
-                ], 422);
+                    'status' => 201,
+                    'message' => "Transação Realizada com Sucesso"
+                ], 201);
             }
             else{
-                if (Category::where('id', '=', $request->id_category)->where('id_user', '=', $id_user)->first()){
-                    $transaction = Transaction::create([
-                        'value' => $request->value,
-                        'type' => $request->type,
-                        'id_user' => $id_user,
-                        'id_category' => $request->id_category,
-                    ]);
-        
-                    if ($transaction){
-                        return response()->json([
-                            'status' => 201,
-                            'message' => "Transação Realizada com Sucesso"
-                        ], 201);
-                    }
-                    else{
-                        return response()->json([
-                            'status' => 500,
-                            'message' => "Algo Deu Errado"
-                        ], 500);
-                    }
-                }
-                else{
-                    return response()->json([
-                        'status' => 500,
-                        'message' => "ID de categoria errado"
-                    ], 500);
-                }
+                return response()->json([
+                    'status' => 500,
+                    'message' => "Algo Deu Errado"
+                ], 500);
             }
         }
         else{
             return response()->json([
-                'status' => 204,
-                'message' => 'O usuário de id inserido não existe'
-            ], 204);
+                'status' => 200,
+                'message' => "Categoria não Encontrada"
+            ], 200);
         }
     }
 
     public function destroy($id_user, $id_transaction){
-        if(User::find($id_user)){
-            $transaction = Transaction::find($id_transaction);
-            
-            if ($transaction && $transaction->id_user == $id_user){
+        $transaction = Transaction::where('id', $id_transaction)->where('id_user', $id_user)->first();
+        if($transaction){
                 $transaction->delete();
     
                 return response()->json([
@@ -101,18 +83,11 @@ class TransactionController extends Controller
                     'message' => 'Transação Excluída com Sucesso'
                 ], 200);
             }
-            else{
-                return response()->json([
-                    'status' => 400,
-                    'message' => 'Transação não Encontrada'
-                ], 400);
-            }
-        }
         else{
             return response()->json([
-                'status' => 204,
-                'message' => 'O usuário de id inserido não existe'
-            ], 204);
+                'status' => 200,
+                'message' => 'Transação não Encontrada'
+            ], 200);
         }
     }
 
@@ -139,9 +114,9 @@ class TransactionController extends Controller
             }
             else{
                 return response()->json([
-                    'status' => 404,
-                    'message' => 'Nenhuma Transação Feita'
-                ], 404);
+                    'status' => 200,
+                    'message' => 'Nenhuma Transação Encontrada'
+                ], 200);
             }   
     }
 }
