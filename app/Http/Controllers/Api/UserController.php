@@ -21,9 +21,9 @@ class UserController extends Controller{
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'Nenhum Registro Encontrado'
-            ], 404);
+            ], 204);
         }
     }
 
@@ -56,9 +56,9 @@ class UserController extends Controller{
                 ]);
 
                 return response()->json([
-                    'status' => 200,
+                    'status' => 201,
                     'message' => "Usuário Criado com Sucesso"
-                ], 200);
+                ], 201);
             }
             else{
                 return response()->json([
@@ -80,9 +80,9 @@ class UserController extends Controller{
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'Usuário não Encontrado'
-            ], 404);
+            ], 204);
         }
     }
     
@@ -138,9 +138,9 @@ class UserController extends Controller{
             }
             else{
                 return response()->json([
-                    'status' => 404,
+                    'status' => 204,
                     'message' => "Usuário não Encontrado"
-                ], 404);
+                ], 204);
             }
         }
     }
@@ -172,9 +172,9 @@ class UserController extends Controller{
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'Usuário não Encontrado'
-            ], 404);
+            ], 204);
         }
     }
 }

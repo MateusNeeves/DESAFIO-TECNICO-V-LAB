@@ -24,16 +24,16 @@ class TransactionController extends Controller
             }
             else{
                 return response()->json([
-                    'status' => 404,
+                    'status' => 204,
                     'message' => 'Você Não Realizou Nenhuma Transação'
-                ], 404);
+                ], 204);
             }
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'O usuário de id inserido não existe'
-            ], 404);
+            ], 204);
         }
     }
 
@@ -62,9 +62,9 @@ class TransactionController extends Controller
         
                     if ($transaction){
                         return response()->json([
-                            'status' => 200,
+                            'status' => 201,
                             'message' => "Transação Realizada com Sucesso"
-                        ], 200);
+                        ], 201);
                     }
                     else{
                         return response()->json([
@@ -83,9 +83,9 @@ class TransactionController extends Controller
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'O usuário de id inserido não existe'
-            ], 404);
+            ], 204);
         }
     }
 
@@ -98,21 +98,21 @@ class TransactionController extends Controller
     
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Transação Excuída com Sucesso'
+                    'message' => 'Transação Excluída com Sucesso'
                 ], 200);
             }
             else{
                 return response()->json([
-                    'status' => 404,
+                    'status' => 400,
                     'message' => 'Transação não Encontrada'
-                ], 404);
+                ], 400);
             }
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'O usuário de id inserido não existe'
-            ], 404);
+            ], 204);
         }
     }
 

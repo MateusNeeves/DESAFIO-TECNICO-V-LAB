@@ -23,16 +23,16 @@ class CategoryController extends Controller
             }
             else{
                 return response()->json([
-                    'status' => 404,
+                    'status' => 204,
                     'message' => 'Você Não Possui Categorias Cadastradas'
-                ], 404);
+                ], 204);
             }
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'O usuário de id inserido não existe'
-            ], 404);
+            ], 204);
         }
     }
 
@@ -63,9 +63,9 @@ class CategoryController extends Controller
         
                     if ($category){
                         return response()->json([
-                            'status' => 200,
+                            'status' => 201,
                             'message' => "Categoria Criada com Sucesso"
-                        ], 200);
+                        ], 201);
                     }
                     else{
                         return response()->json([
@@ -78,9 +78,9 @@ class CategoryController extends Controller
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'O usuário de id inserido não existe'
-            ], 404);
+            ], 204);
         }
     }
 
@@ -94,9 +94,9 @@ class CategoryController extends Controller
 
                 if ($geral_category->id == $id_category){
                     return response()->json([
-                        'status' => 404,
+                        'status' => 405,
                         'message' => 'Acesso Negado. Essa Categoria Não Pode ser Excluída'
-                    ], 404);
+                    ], 405);
                 }
 
                 $transactions = Transaction::where('id_category', $id_category)->get();
@@ -115,16 +115,16 @@ class CategoryController extends Controller
             }
             else{
                 return response()->json([
-                    'status' => 404,
+                    'status' => 400,
                     'message' => 'Categoria não Encontrada'
-                ], 404);
+                ], 400);
             }
         }
         else{
             return response()->json([
-                'status' => 404,
+                'status' => 204,
                 'message' => 'O usuário de id inserido não existe'
-            ], 404);
+            ], 204);
         }
     }
 }
