@@ -12,6 +12,119 @@ use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
+/**
+     * 
+     * @OA\Get(
+     *     path="/api/transaction/{id_user}",
+     *     tags={"Transação"},
+     *     summary="Listar todas as Transações do Usuário Especificado",
+     *     description="Usuário pode utilizar para visualizar todas as suas transações.",
+     *     operationId="transactionIndex",
+     *     @OA\Parameter(
+     *         name="id_user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação Bem Seucedida",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Nenhum Usuário Encontrado"
+     *     ),
+     * ),
+     * 
+     * @OA\Post(
+     *     path="/api/transaction/{id_user}",
+     *     tags={"Transação"},
+     *     summary="Cadastrar Transação Para o Usuário Especificado",
+     *     description="Usuário pode utilizar para cadastrar uma nova transação na sua conta.",
+     *     operationId="transactionStore",
+     *     @OA\Parameter(
+     *         name="id_user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Dados da Categoria",
+     *         @OA\JsonContent(
+     *              required={"value", "type", "id_category"},
+     *              @OA\Property(property="value", type="numeric", example=""),
+     *              @OA\Property(property="type", type="string", example=""),
+     *              @OA\Property(property="id_category", type="integer", example=""),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Input Inválido",
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Transação Adicionada no Banco de Dados",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Algo Errado no Insert"
+     *     ),
+     * ),
+     * 
+     * @OA\Delete(
+     *     path="/api/transaction/{id_user}/delete/{id_category}",
+     *     tags={"Transação"},
+     *     summary="Deletar a Transação Especificada do Usuário Especificado",
+     *     description="Usuário pode utilizar para deletar uma transação da sua conta.",
+     *     operationId="transactionDestroy",
+     *     @OA\Parameter(
+     *         name="id_user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Parameter(
+     *         name="id_category",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Transação Excluída",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Transação não Encontrado",
+     *     ),
+     * )
+     *    
+     * @OA\Get(
+     *     path="/api/transaction",
+     *     tags={"Transação"},
+     *     summary="Listar todas as Transações Existentes",
+     *     description="Desenvolvedor pode utilizar para visualizar todas as transações existentes no banco de dados.",
+     *     operationId="transactionIndexAdmin",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação Bem Seucedida",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Nenhuma Transação Encontrada"
+     *     ),
+     * ),
+*/
+
     public function index($id_user){
         $transactions = Transaction::where('id_user', '=', $id_user)->get();
 
@@ -85,9 +198,9 @@ class TransactionController extends Controller
             }
         else{
             return response()->json([
-                'status' => 200,
+                'status' => 404,
                 'message' => 'Transação não Encontrada'
-            ], 200);
+            ], 404);
         }
     }
 
@@ -114,9 +227,9 @@ class TransactionController extends Controller
             }
             else{
                 return response()->json([
-                    'status' => 200,
+                    'status' => 404,
                     'message' => 'Nenhuma Transação Encontrada'
-                ], 200);
+                ], 404);
             }   
     }
 }

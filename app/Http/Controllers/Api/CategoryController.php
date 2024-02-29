@@ -14,13 +14,13 @@ class CategoryController extends Controller
     /**
      * 
      * @OA\Get(
-     *     path="/api/category/{id}",
+     *     path="/api/category/{id_user}",
      *     tags={"Categoria"},
-     *     summary="Listar todas as Categorias",
+     *     summary="Listar todas as Categorias do Usuário Especificado",
      *     description="Usuário pode utilizar para visualizar todas as suas categorias.",
      *     operationId="categoryIndex",
      *     @OA\Parameter(
-     *         name="id",
+     *         name="id_user",
      *         in="path",
      *         required=true,
      *         @OA\Schema(
@@ -33,10 +33,88 @@ class CategoryController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Nenhum Usuário Encontrado"
+     *         description="Nenhuma Categoria Encontrado Para Esse Usuário"
      *     ),
      * ),
-     */
+     * 
+     * @OA\Post(
+     *     path="/api/category/{id_user}",
+     *     tags={"Categoria"},
+     *     summary="Cadastrar Nova Categoria Para o Usuário Especificado",
+     *     description="Usuário pode utilizar para cadastrar uma nova categoria na sua conta.",
+     *     operationId="categoryStore",
+     *     @OA\Parameter(
+     *         name="id_user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Dados da Categoria",
+     *         @OA\JsonContent(
+     *              required={"name"},
+     *              @OA\Property(property="name", type="string", example=""),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Input Inválido",
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Categoria Já Existe",
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Categoria Adicionada no Banco de Dados",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Algo Errado no Insert"
+     *     ),
+     * ),
+     * 
+     * @OA\Delete(
+     *     path="/api/category/{id_user}/delete/{id_category}",
+     *     tags={"Categoria"},
+     *     summary="Deletar a Categoria Especificada do Usuário Especificado",
+     *     description="Usuário pode utilizar para deletar uma categoria da sua conta. Todas as transações dessa categoria apagada são alteradas para categorial 'Geral'.",
+     *     operationId="categoryDestroy",
+     *     @OA\Parameter(
+     *         name="id_user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     *     @OA\Parameter(
+     *         name="id_category",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         ),
+     *     ),
+     * 
+     *     @OA\Response(
+     *         response=405,
+     *         description="Acesso Negado. Categoria 'Geral' não pode ser excluída.",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Categoria Excluída e transações atualizadas.",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Categoria não Encontrado",
+     *     ),
+     * )
+     *     
+*/
 
 
     public function index($id_user){
@@ -51,9 +129,9 @@ class CategoryController extends Controller
 
         else{
             return response()->json([
-                'status' => 200,
+                'status' => 404,
                 'message' => 'Nenhuma Categoria Encontrada'
-            ], 200);
+            ], 404);
         }
     }
 
@@ -124,9 +202,9 @@ class CategoryController extends Controller
         }            
         else{
             return response()->json([
-                'status' => 200,
+                'status' => 404,
                 'message' => 'Categoria não Encontrada'
-            ], 200);
+            ], 404);
         }
     }
 }

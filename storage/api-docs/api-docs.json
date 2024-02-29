@@ -8,17 +8,136 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/category/{id}": {
+        "/api/category/{id_user}": {
             "get": {
                 "tags": [
                     "Categoria"
                 ],
-                "summary": "Listar todas as Categorias",
+                "summary": "Listar todas as Categorias do Usuário Especificado",
                 "description": "Usuário pode utilizar para visualizar todas as suas categorias.",
                 "operationId": "categoryIndex",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação Bem Seucedida"
+                    },
+                    "404": {
+                        "description": "Nenhuma Categoria Encontrado Para Esse Usuário"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categoria"
+                ],
+                "summary": "Cadastrar Nova Categoria Para o Usuário Especificado",
+                "description": "Usuário pode utilizar para cadastrar uma nova categoria na sua conta.",
+                "operationId": "categoryStore",
+                "parameters": [
+                    {
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados da Categoria",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Input Inválido"
+                    },
+                    "409": {
+                        "description": "Categoria Já Existe"
+                    },
+                    "201": {
+                        "description": "Categoria Adicionada no Banco de Dados"
+                    },
+                    "500": {
+                        "description": "Algo Errado no Insert"
+                    }
+                }
+            }
+        },
+        "/api/category/{id_user}/delete/{id_category}": {
+            "delete": {
+                "tags": [
+                    "Categoria"
+                ],
+                "summary": "Deletar a Categoria Especificada do Usuário Especificado",
+                "description": "Usuário pode utilizar para deletar uma categoria da sua conta. Todas as transações dessa categoria apagada são alteradas para categorial 'Geral'.",
+                "operationId": "categoryDestroy",
+                "parameters": [
+                    {
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id_category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Acesso Negado. Categoria 'Geral' não pode ser excluída."
+                    },
+                    "200": {
+                        "description": "Categoria Excluída e transações atualizadas."
+                    },
+                    "404": {
+                        "description": "Categoria não Encontrado"
+                    }
+                }
+            }
+        },
+        "/api/transaction/{id_user}": {
+            "get": {
+                "tags": [
+                    "Transação"
+                ],
+                "summary": "Listar todas as Transações do Usuário Especificado",
+                "description": "Usuário pode utilizar para visualizar todas as suas transações.",
+                "operationId": "transactionIndex",
+                "parameters": [
+                    {
+                        "name": "id_user",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -32,6 +151,119 @@
                     },
                     "404": {
                         "description": "Nenhum Usuário Encontrado"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Transação"
+                ],
+                "summary": "Cadastrar Transação Para o Usuário Especificado",
+                "description": "Usuário pode utilizar para cadastrar uma nova transação na sua conta.",
+                "operationId": "transactionStore",
+                "parameters": [
+                    {
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados da Categoria",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "value",
+                                    "type",
+                                    "id_category"
+                                ],
+                                "properties": {
+                                    "value": {
+                                        "type": "numeric",
+                                        "example": ""
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "id_category": {
+                                        "type": "integer",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Input Inválido"
+                    },
+                    "201": {
+                        "description": "Transação Adicionada no Banco de Dados"
+                    },
+                    "500": {
+                        "description": "Algo Errado no Insert"
+                    }
+                }
+            }
+        },
+        "/api/transaction/{id_user}/delete/{id_category}": {
+            "delete": {
+                "tags": [
+                    "Transação"
+                ],
+                "summary": "Deletar a Transação Especificada do Usuário Especificado",
+                "description": "Usuário pode utilizar para deletar uma transação da sua conta.",
+                "operationId": "transactionDestroy",
+                "parameters": [
+                    {
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id_category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transação Excluída"
+                    },
+                    "404": {
+                        "description": "Transação não Encontrado"
+                    }
+                }
+            }
+        },
+        "/api/transaction": {
+            "get": {
+                "tags": [
+                    "Transação"
+                ],
+                "summary": "Listar todas as Transações Existentes",
+                "description": "Desenvolvedor pode utilizar para visualizar todas as transações existentes no banco de dados.",
+                "operationId": "transactionIndexAdmin",
+                "responses": {
+                    "200": {
+                        "description": "Operação Bem Seucedida"
+                    },
+                    "404": {
+                        "description": "Nenhuma Transação Encontrada"
                     }
                 }
             }
@@ -208,7 +440,7 @@
                     "Usuário"
                 ],
                 "summary": "Deletar um Usuário",
-                "description": "Desenvolvedor pode utilizar para deletar um usuário pelo id.",
+                "description": "Desenvolvedor pode utilizar para deletar um usuário pelo id.Todas as categorias e transações desse usuário serão excluídas.",
                 "operationId": "userDestroy",
                 "parameters": [
                     {

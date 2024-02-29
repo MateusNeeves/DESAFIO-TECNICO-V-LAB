@@ -129,7 +129,7 @@ class UserController extends Controller{
      *     path="/api/user/delete/{id}",
      *     tags={"Usuário"},
      *     summary="Deletar um Usuário",
-     *     description="Desenvolvedor pode utilizar para deletar um usuário pelo id.",
+     *     description="Desenvolvedor pode utilizar para deletar um usuário pelo id.Todas as categorias e transações desse usuário serão excluídas.",
      *     operationId="userDestroy",
      *     @OA\Parameter(
      *         name="id",
